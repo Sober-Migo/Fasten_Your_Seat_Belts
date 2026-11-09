@@ -4,6 +4,7 @@
 - RAG PDF Q&A → `05_applied_systems` / [RAG](https://github.com/Sober-Migo/RAG)
 - PACE Speech Analytics → `05_applied_systems` / [PACE](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics)
 - HelloML OCR → `05_applied_systems` / [HelloML](https://github.com/Sober-Migo/HelloML)
+- Enterprise SQL Assistant (Hermes Agent) → `06_applied_systems` / [Fasten_Your_Seat_Belts](https://github.com/Sober-Migo/Fasten_Your_Seat_Belts)
 
 ## Machine Learning (graded assignments)
 - Linear Regression

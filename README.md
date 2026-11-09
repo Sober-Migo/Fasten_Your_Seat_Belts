@@ -32,6 +32,7 @@ Machine Learning  →  Deep Learning  →  NLP  →  Generative AI / LLMs  →  
 | **RAG — PDF Q&A** | LangChain, Chroma, ONNX embeddings, Groq, Gradio | [Sober-Migo/RAG](https://github.com/Sober-Migo/RAG) · [HF Space](https://huggingface.co/spaces/Sober-Migo/RAG) |
 | **PACE — Egyptian Psychiatric Speech Analytics** | FastAPI, Whisper, Wav2Vec2, CAMeLBERT, Qwen, multi-GPU | [PACE-…](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics) |
 | **HelloML — Digit OCR** | sklearn Pipeline, GridSearchCV, MLP | [HelloML](https://github.com/Sober-Migo/HelloML) |
+| **Enterprise SQL Assistant** | Hermes Agent skill, SQLite, FastAPI, Docker | [Fasten_Your_Seat_Belts](https://github.com/Sober-Migo/Fasten_Your_Seat_Belts) |
 
 ---
 
