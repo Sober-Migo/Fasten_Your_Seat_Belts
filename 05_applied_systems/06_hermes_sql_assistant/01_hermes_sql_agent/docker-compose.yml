@@ -1,0 +1,16 @@
+# Docker compose for the FastAPI SQL Assistant
+
+services:
+  sql-assistant:
+    build: .
+    container_name: sql-assistant
+    ports:
+      - "8000:8000"
+    # Bind the sample database so the running container shares the host file
+    # (read-only inside the container).
+    volumes:
+      - ./database:/app/01_hermes_sql_agent/database:ro
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
