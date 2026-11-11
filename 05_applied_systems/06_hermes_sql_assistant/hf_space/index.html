@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Enterprise SQL Assistant</title>
+<script src="sql-wasm.js"></script>
+<script src="db.js"></script>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --border: #30363d; --fg: #e6edf3;
+    --muted: #8b949e; --accent: #3fb950; --accent2: #58a6ff; --danger: #f85149;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 28px 18px 60px; }
+  header h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: -0.3px; }
+  header p { margin: 0 0 4px; color: var(--muted); }
+  .badges { margin: 12px 0 22px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    font-size: 12px; padding: 3px 9px; border: 1px solid var(--border);
+    border-radius: 999px; color: var(--muted); background: var(--panel);
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 16px;
+  }
+  form { display: flex; gap: 8px; }
+  input[type=text] {
+    flex: 1; background: #0d1117; border: 1px solid var(--border); border-radius: 8px;
+    color: var(--fg); padding: 11px 13px; font-size: 15px; outline: none;
+  }
+  input[type=text]:focus { border-color: var(--accent2); }
+  button {
+    background: var(--accent); color: #06210f; border: 0; border-radius: 8px;
+    padding: 11px 18px; font-size: 15px; font-weight: 600; cursor: pointer;
+  }
+  button:hover { filter: brightness(1.08); }
+  .examples { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 12px; }
+  .chip {
+    font-size: 12.5px; padding: 5px 11px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); color: var(--accent2); background: transparent;
+  }
+  .chip:hover { border-color: var(--accent2); }
+  .turn { border-top: 1px solid var(--border); padding-top: 14px; margin-top: 14px; }
+  .turn:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+  .q { font-weight: 600; margin-bottom: 8px; }
+  .q::before { content: "▸ "; color: var(--accent2); }
+  .label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); margin: 10px 0 5px; }
+  pre {
+    background: #0d1117; border: 1px solid var(--border); border-radius: 8px;
+    padding: 11px 13px; overflow-x: auto; margin: 0; font-size: 13px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  }
+  .sql pre { color: var(--accent2); }
+  table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+  th, td { border: 1px solid var(--border); padding: 7px 11px; text-align: left; }
+  th { background: #1f2630; color: var(--muted); font-weight: 600; }
+  tr:nth-child(even) td { background: #12171e; }
+  .err { color: var(--danger); }
+  .hint { color: var(--muted); font-style: italic; }
+  footer { color: var(--muted); font-size: 12.5px; margin-top: 26px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🗄️ Enterprise SQL Assistant</h1>
+    <p>Ask about the company database in plain English — answers come back as read-only SQL and a table.</p>
+    <div class="badges">
+      <span class="badge">SQLite · WebAssembly</span>
+      <span class="badge">runs 100% in your browser</span>
+      <span class="badge">zero-GPU · static tier</span>
+    </div>
+  </header>
+
+  <div class="card">
+    <form id="ask">
+      <input type="text" id="q" placeholder="e.g. What is the total sales?" autocomplete="off" />
+      <button type="submit" id="go">Ask</button>
+    </form>
+    <div class="examples" id="examples"></div>
+  </div>
+
+  <div class="card" id="log">
+    <div class="hint" id="empty">No questions yet. Ask something above, or tap an example.</div>
+  </div>
+
+  <footer>
+    Schema: <code>customers(customer_id, name, country)</code> ·
+    <code>orders(order_id, customer_id, amount, order_date)</code><br />
+    Only <code>SELECT</code> statements are ever executed.
+  </footer>
+</div>
+
+<script>
+// --- Read-only enforcement (mirrors the Python implementation) --------------
+const BLOCKERS = ["DROP","DELETE","UPDATE","INSERT","PRAGMA","ATTACH","REPLACE","CREATE",
+                  "ALTER","GRANT","REVOKE","TRUNCATE","EXPLAIN","ANALYZE"];
+
+function validateQuery(query) {
+  const cleaned = query.replace(/--.*$/gm, "").trim().toUpperCase();
+  const words = cleaned.split(/\s+/).map(w => w.replace(/[(),;:]/g, ""));
+  for (const w of words) if (BLOCKERS.includes(w)) return { ok: false, message: `Forbidden operation: ${w}` };
+  return { ok: true };
+}
+
+// --- Natural language -> SQL (same phrase map as the Python app) ------------
+const SQL_MAP = {
+  "total sales":      "SELECT SUM(amount) AS total_sales FROM orders",
+  "sales by customer":"SELECT c.name, SUM(o.amount) AS total FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.name ORDER BY total DESC",
+  "all customers":    "SELECT * FROM customers",
+  "all orders":       "SELECT * FROM orders",
+  "october":          "SELECT * FROM orders WHERE order_date LIKE '2026-10%'",
+  "november":         "SELECT * FROM orders WHERE order_date LIKE '2026-11%'",
+  "egypt":            "SELECT * FROM customers WHERE country = 'Egypt'",
+  "usa":              "SELECT * FROM customers WHERE country = 'USA'",
+  "uk":               "SELECT * FROM customers WHERE country = 'UK'",
+  "ahmed magdy":      "SELECT * FROM customers WHERE name LIKE '%Ahmed%' AND name LIKE '%Magdy%'"
+};
+
+function generateSQL(question) {
+  const ql = question.toLowerCase();
+  let best = null, bestLen = 0;
+  for (const [phrase, sql] of Object.entries(SQL_MAP)) {
+    const words = phrase.split(" ");
+    const qualifies = words.every(w => ql.includes(w));
+    if (qualifies && words.length > bestLen) { bestLen = words.length; best = sql; }
+  }
+  return best || "SELECT * FROM orders LIMIT 5";
+}
+
+// --- sql.js bootstrap -------------------------------------------------------
+let db = null;
+function base64ToBytes(b64) {
+  const bin = atob(b64);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return bytes;
+}
+
+initSqlJs({ locateFile: f => f }).then(SQL => {
+  db = new SQL.Database(base64ToBytes(DB_BASE64));
+  document.getElementById("go").disabled = false;
+}).catch(err => {
+  document.getElementById("empty").innerHTML =
+    '<span class="err">Failed to load the SQLite engine: ' + err.message + "</span>";
+});
+
+const EXAMPLES = ["Show all customers", "What is the total sales?", "Sales by customer name",
+                  "Orders placed in October 2026", "Customers from Egypt"];
+const exBox = document.getElementById("examples");
+EXAMPLES.forEach(text => {
+  const chip = document.createElement("span");
+  chip.className = "chip"; chip.textContent = text;
+  chip.onclick = () => { document.getElementById("q").value = text; document.getElementById("ask").requestSubmit(); };
+  exBox.appendChild(chip);
+});
+
+function runQuery(sql) {
+  const check = validateQuery(sql);
+  if (!check.ok) return { error: check.message };
+  if (!/^\s*SELECT/i.test(sql)) return { error: "Only SELECT queries are allowed." };
+  try {
+    const res = db.exec(sql);
+    if (!res.length) return { columns: [], rows: [] };
+    return { columns: res[0].columns, rows: res[0].values };
+  } catch (e) {
+    return { error: e.message };
+  }
+}
+
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
+function renderTurn(question) {
+  const sql = generateSQL(question);
+  const out = runQuery(sql);
+  const wrap = document.createElement("div");
+  wrap.className = "turn";
+
+  let html = '<div class="q">' + esc(question) + "</div>";
+  html += '<div class="label">Generated query</div><div class="sql"><pre>' + esc(sql) + "</pre></div>";
+
+  if (out.error) {
+    html += '<div class="label">Result</div><pre class="err">' + esc(out.error) + "</pre>";
+  } else if (!out.rows.length) {
+    html += '<div class="label">Result</div><div class="hint">No rows returned.</div>';
+  } else {
+    html += '<div class="label">Result · ' + out.rows.length + " row" + (out.rows.length === 1 ? "" : "s") + "</div>";
+    html += "<table><thead><tr>" + out.columns.map(c => "<th>" + esc(c) + "</th>").join("") + "</tr></thead><tbody>";
+    for (const row of out.rows) {
+      html += "<tr>" + row.map(v => "<td>" + esc(v === null ? "NULL" : v) + "</td>").join("") + "</tr>";
+    }
+    html += "</tbody></table>";
+  }
+
+  wrap.innerHTML = html;
+  const empty = document.getElementById("empty");
+  if (empty) empty.remove();
+  const log = document.getElementById("log");
+  log.insertBefore(wrap, log.firstChild);
+  const card = document.querySelector(".card:last-of-type");
+}
+
+document.getElementById("ask").addEventListener("submit", ev => {
+  ev.preventDefault();
+  const input = document.getElementById("q");
+  const question = input.value.trim();
+  if (!question) return;
+  if (!db) { alert("The SQLite engine is still loading — try again in a moment."); return; }
+  renderTurn(question);
+  input.value = "";
+  input.focus();
+});
+</script>
+</body>
+</html>

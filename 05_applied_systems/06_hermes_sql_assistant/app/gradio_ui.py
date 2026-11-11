@@ -14,6 +14,12 @@ try:
 except ImportError:
     gr = None  # Not running in a Gradio context
 
+# Import spaces.GPU decorator (for HF zero-GPU)
+try:
+    from gradio.spaces import GPU
+except ImportError:
+    GPU = lambda *a, **kw: lambda f: f  # no-op when not in HF space
+
 # Configuration
 DB_PATH = os.environ.get("SQL_DB_PATH", "sample_company.db")
 
@@ -60,6 +66,7 @@ def execute_query(query):
         conn.close()
 
 
+@GPU(duration=60)
 def answer_question(question):
     """Process natural language question -> generate SQL -> execute -> format."""
     if not question.strip():
