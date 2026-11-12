@@ -4,6 +4,7 @@
 - RAG PDF Q&A → `05_applied_systems` / [RAG](https://github.com/Sober-Migo/RAG)
 - PACE Speech Analytics → `05_applied_systems` / [PACE](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics)
 - HelloML OCR → `05_applied_systems` / [HelloML](https://github.com/Sober-Migo/HelloML)
+- Fasten Your Seat Belts AI Portal → `05_applied_systems/07_fasten_your_seat_belts_ai_portal` / [Live Space](https://huggingface.co/spaces/Sober-Migo/fasten-your-seat-belts-ai)
 - Enterprise SQL Assistant (Hermes Agent) → `06_applied_systems` / [Fasten_Your_Seat_Belts](https://github.com/Sober-Migo/Fasten_Your_Seat_Belts)
 
 ## Machine Learning (graded assignments)

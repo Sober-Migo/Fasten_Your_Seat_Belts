@@ -1,6 +1,6 @@
 # 05 — Applied / capstone systems
 
-Standalone repos that turn course skills into deployable demos.
+Standalone repos and deployable demos that turn course skills into applied systems.
 
 ## RAG — PDF Question Answering
 
@@ -29,6 +29,16 @@ Pipeline: PDF → chunk → embed → retrieve → grounded generation (Markdown
 | **Stack** | sklearn Pipeline · GridSearchCV · MLP / logistic / linear · joblib |
 | **Focus** | End-to-end classical ML system on DIDA digits |
 
+## Fasten Your Seat Belts AI Portal
+
+| | |
+|--|--|
+| **Source** | [Portal files](./07_fasten_your_seat_belts_ai_portal/) · [Live Hugging Face Space](https://huggingface.co/spaces/Sober-Migo/fasten-your-seat-belts-ai) |
+| **Stack** | Gradio · SQLite · LangChain · Chroma · DistilBERT · Docker |
+| **Deploy** | Render · Railway · Fly.io configurations are included in the project folder |
+
+The sentiment model is CPU-based, downloads its weights on first use, and requires at least 2 GB RAM. Check provider pricing before deploying multiple services.
+
 ---
 
-These three are the primary **portfolio showcase** items; course folders (01–04) document the training path behind them.
+These are the primary **portfolio showcase** items; course folders (01–04) document the training path behind them.

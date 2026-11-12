@@ -21,7 +21,7 @@ Machine Learning  →  Deep Learning  →  NLP  →  Generative AI / LLMs  →  
 | 02 Deep Learning | [`02_deep_learning/`](./02_deep_learning/) | [Coursera_Deep_Learning_Specialization](https://github.com/Sober-Migo/Coursera_Deep_Learning_Specialization) |
 | 03 NLP | [`03_nlp/`](./03_nlp/) | [NLP_Specialization](https://github.com/Sober-Migo/NLP_Specialization) |
 | 04 Generative AI & LLMs | [`04_generative_ai_llms/`](./04_generative_ai_llms/) | [IBM_Generative_AI_Engineering_with_LLMs_Specialization](https://github.com/Sober-Migo/IBM_Generative_AI_Engineering_with_LLMs_Specialization) |
-| 05 Applied / capstone systems | [`05_applied_systems/`](./05_applied_systems/) | [RAG](https://github.com/Sober-Migo/RAG) · [PACE](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics) · [HelloML](https://github.com/Sober-Migo/HelloML) |
+| 05 Applied / capstone systems | [`05_applied_systems/`](./05_applied_systems/) | [RAG](https://github.com/Sober-Migo/RAG) · [PACE](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics) · [HelloML](https://github.com/Sober-Migo/HelloML) · [AI Portal](./05_applied_systems/07_fasten_your_seat_belts_ai_portal/) |
 
 ---
 
@@ -33,6 +33,7 @@ Machine Learning  →  Deep Learning  →  NLP  →  Generative AI / LLMs  →  
 | **PACE — Egyptian Psychiatric Speech Analytics** | FastAPI, Whisper, Wav2Vec2, CAMeLBERT, Qwen, multi-GPU | [PACE-…](https://github.com/Sober-Migo/PACE-Egyptian_Psychiatric_Speech_Analytics) |
 | **HelloML — Digit OCR** | sklearn Pipeline, GridSearchCV, MLP | [HelloML](https://github.com/Sober-Migo/HelloML) |
 | **Enterprise SQL Assistant** | Hermes Agent skill, SQLite, FastAPI, Docker | [Fasten_Your_Seat_Belts](https://github.com/Sober-Migo/Fasten_Your_Seat_Belts) |
+| **Fasten Your Seat Belts AI Portal** | Gradio, SQLite, LangChain, Chroma, DistilBERT | [Source and deployment files](./05_applied_systems/07_fasten_your_seat_belts_ai_portal/) · [HF Space](https://huggingface.co/spaces/Sober-Migo/fasten-your-seat-belts-ai) |
 
 ---
 
@@ -41,8 +42,6 @@ Machine Learning  →  Deep Learning  →  NLP  →  Generative AI / LLMs  →  
 1. Pick a category folder → open its `README.md` for the full project list.
 2. Follow the **source path** link into the course repository for the notebook.
 3. For demos and deployment, prefer **05_applied_systems**.
-
----
 
 ## Author
 

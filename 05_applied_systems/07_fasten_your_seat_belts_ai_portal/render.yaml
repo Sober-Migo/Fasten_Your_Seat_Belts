@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: fasten-your-seat-belts-portal
+    runtime: docker
+    rootDir: 05_applied_systems/07_fasten_your_seat_belts_ai_portal
+    plan: standard
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: SENTIMENT_MODEL
+        value: distilbert/distilbert-base-uncased-finetuned-sst-2-english
