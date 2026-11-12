@@ -1,50 +1,38 @@
-# 04 — Generative AI & LLMs (IBM)
+# 🔥 Zone 04 — The Engine Room
 
-**Specialization:** IBM Generative AI Engineering with LLMs  
+> **Mission:** *"Where transformers stop being a library and start being architecture."*
+> Seven labs building a transformer from attention matrices up, then teaching it to follow instructions, judge its own answers, and finally build fields of knowledge.
+
+**Specialization:** IBM Generative AI Engineering with LLMs
 **Source:** [IBM_Generative_AI_Engineering_with_LLMs_Specialization](https://github.com/Sober-Migo/IBM_Generative_AI_Engineering_with_LLMs_Specialization)
+**Status:** ✅ Zone cleared — 7/7 labs
 
-## Labs by course (from repo)
+---
 
-### C01 — Architecture & data preparation
-- Exploring Generative AI Libraries
-- Implementing Tokenization
-- Creating an NLP Data Loader
+## 🎯 Lab log
 
-### C03 — Language modeling with Transformers
-- Attention Mechanism and Positional Encoding
-- Applying Transformers for Classification
-- Decoder Causal LM (GPT-like)
-- Encoder Models with Baby BERT
-- Data preparation for transformers
+| Lab | Theme | Key experiments |
+|-----|-------|-----------------|
+| **C01 — Fuel & Ignition** | Architecture & data preparation | Tokenization from scratch · NLP data loaders · exploring GenAI libraries |
+| **C03 — Metalwork** | Language modeling with transformers | **Boss: build a transformer from scratch.** Attention mechanism, positional encoding, GPT-like causal decoder, Baby BERT encoder |
+| **C04 — Precision Tuning** | Fine-tuning transformers | HF model loading & inference · fine-tuning with PyTorch/HF · adapters · **LoRA** · **QLoRA** |
+| **C05 — The Conscience (RLHF)** | Advanced fine-tuning | Instruction fine-tuning · reward modeling · **PPOTrainer** · DPO |
+| **C06 — Retrieval & Agency** | RAG + LangChain agents | LangChain fundamentals · RAG w/ Hugging Face & PyTorch · weather agent · document QA |
+| **C07 — Capstone Track** | Full RAG application | Document loaders → text-splitter → embeddings → vector store → retriever → grounded answers |
 
-### C04 — Fine-tuning Transformers
-- Loading Models and Inference with Hugging Face
-- Pre-training LLMs with Hugging Face (optional)
-- Fine-Tuning Transformers with PyTorch and Hugging Face
-- Adapters in PyTorch
-- LoRA with PyTorch
-- QLoRA with Hugging Face
+---
 
-### C05 — Advanced fine-tuning
-- Instruction fine-tuning
-- Reward Modeling
-- PPOTrainer
-- DPO Fine-Tuning
+## ⚔️ Master boss — *"Keep the generation grounded"*
 
-### C06 — RAG & LangChain agents
-- Build Smarter AI Apps with LangChain
-- RAG with Hugging Face
-- RAG with PyTorch
-- In-Context Learning and Prompt Templates
-- Building AI Agents from Scratch (Weather Agent)
-- Summarize private documents using RAG + LangChain + LLMs
+The hardest enemy here was not the model, but **its fluent hallucination**. A transformer that confidently invents citations is worse than useless. The turning point: building a pipeline that only allows answers *grounded in retrieved chunks*.
 
-### C07 — Capstone project track (RAG application)
-- LangChain document loader
-- Full document retrieve limitation
-- LangChain text-splitter
-- Embed documents (watsonx embeddings in course lab)
-- LangChain vector store
-- LangChain retriever
+**The war ended here. And the peace treaty went live:**
+→ 📄 [**RAG — PDF Q&A**](../05_applied_systems/#rag--pdf-question-answering) reimplements this capstone without Watsonx — Groq + local ONNX embeddings + Gradio — and is deployed at [HF Space Sober-Migo/RAG](https://huggingface.co/spaces/Sober-Migo/RAG).
 
-**Applied outcome:** production-style reimplementation without Watsonx → [Sober-Migo/RAG](https://github.com/Sober-Migo/RAG) (Groq + local ONNX embeddings + Gradio + HF Space).
+---
+
+## 🔓 Unlocks
+
+Transformer internals · tokenization · GPT/BERT architectures · LoRA & QLoRA fine-tuning · RLHF (reward modeling, PPO, DPO) · LangChain · RAG pipelines · AI agents
+
+**→ Unlocks [Zone 05 — Open Skies](../05_applied_systems/) — where the campaign becomes product.**
