@@ -18,7 +18,7 @@ The sentiment model weights are downloaded from the public Hugging Face Hub on t
 
 This folder contains deployment configurations for Render, Railway, and Fly.io. Each service downloads the model on first use. CPU inference may be slow. Deploying all three creates separate services and may incur separate bills.
 
-- **Render:** create a Blueprint from the repository root; the `render.yaml` service sets this folder as its root and uses the paid Standard plan.
+- **Render:** create a Blueprint from the repository and select `05_applied_systems/07_fasten_your_seat_belts_ai_portal/render.yaml` as the Blueprint file. It sets this folder as the service root and uses the paid Standard plan.
 - **Railway:** create a service from the repository and set its root directory to `05_applied_systems/07_fasten_your_seat_belts_ai_portal`; `railway.json` selects the Dockerfile and configures health checks.
 - **Fly.io:** change the placeholder `app` name in `fly.toml` to a globally unique name, then run `fly launch --no-deploy` and `fly deploy` from this folder.
 
